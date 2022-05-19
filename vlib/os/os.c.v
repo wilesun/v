@@ -39,8 +39,8 @@ fn C._chsize_s(voidptr, u64) int
 
 // read_bytes returns all bytes read from file in `path`.
 [manualfree]
-pub fn read_bytes(path string) ?[]u8 {
-	mut fp := vfopen(path, 'rb')?
+pub fn read_bytes(path string) ![]u8 {
+	mut fp := vfopen(path, 'rb')!
 	defer {
 		C.fclose(fp)
 	}
@@ -69,9 +69,9 @@ pub fn read_bytes(path string) ?[]u8 {
 }
 
 // read_file reads the file in `path` and returns the contents.
-pub fn read_file(path string) ?string {
+pub fn read_file(path string) !string {
 	mode := 'rb'
-	mut fp := vfopen(path, mode)?
+	mut fp := vfopen(path, mode)!
 	defer {
 		C.fclose(fp)
 	}
@@ -260,7 +260,7 @@ pub fn cp(src string, dst string) ? {
 // vfopen returns an opened C file, given its path and open mode.
 // Note: os.vfopen is useful for compatibility with C libraries, that expect `FILE *`.
 // If you write pure V code, os.create or os.open are more convenient.
-pub fn vfopen(path string, mode string) ?&C.FILE {
+pub fn vfopen(path string, mode string) !&C.FILE {
 	if path.len == 0 {
 		return error('vfopen called with ""')
 	}
@@ -1012,9 +1012,9 @@ pub fn is_atty(fd int) int {
 }
 
 // write_file_array writes the data in `buffer` to a file in `path`.
-pub fn write_file_array(path string, buffer array) ? {
-	mut f := create(path)?
-	unsafe { f.write_full_buffer(buffer.data, usize(buffer.len * buffer.element_size))? }
+pub fn write_file_array(path string, buffer array) ! {
+	mut f := create(path)!
+	unsafe { f.write_full_buffer(buffer.data, usize(buffer.len * buffer.element_size))! }
 	f.close()
 }
 

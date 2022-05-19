@@ -75,7 +75,7 @@ pub fn open_file(path string, mode string, options ...int) ?File {
 }
 
 // open tries to open a file for reading and returns back a read-only `File` object.
-pub fn open(path string) ?File {
+pub fn open(path string) !File {
 	/*
 	$if linux {
 		$if !android {
@@ -90,7 +90,7 @@ pub fn open(path string) ?File {
 		}
 	}
 	*/
-	cfile := vfopen(path, 'rb')?
+	cfile := vfopen(path, 'rb')!
 	fd := fileno(cfile)
 	return File{
 		cfile: cfile
@@ -100,7 +100,7 @@ pub fn open(path string) ?File {
 }
 
 // create creates or opens a file at a specified location and returns a write-only `File` object.
-pub fn create(path string) ?File {
+pub fn create(path string) !File {
 	/*
 	// Note: android/termux/bionic is also a kind of linux,
 	// but linux syscalls there sometimes fail,
@@ -124,7 +124,7 @@ pub fn create(path string) ?File {
 		}
 	}
 	*/
-	cfile := vfopen(path, 'wb')?
+	cfile := vfopen(path, 'wb')!
 	fd := fileno(cfile)
 	return File{
 		cfile: cfile

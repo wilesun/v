@@ -97,8 +97,8 @@ pub fn mv_by_cp(source string, target string) ? {
 
 // read_lines reads the file in `path` into an array of lines.
 [manualfree]
-pub fn read_lines(path string) ?[]string {
-	buf := read_file(path)?
+pub fn read_lines(path string) ![]string {
+	buf := read_file(path)!
 	res := buf.split_into_lines()
 	unsafe { buf.free() }
 	return res
@@ -344,7 +344,7 @@ pub fn user_os() string {
 }
 
 // user_names returns an array of the name of every user on the system.
-pub fn user_names() ?[]string {
+pub fn user_names() ![]string {
 	$if windows {
 		result := execute('wmic useraccount get name')
 		if result.exit_code != 0 {
@@ -355,7 +355,7 @@ pub fn user_names() ?[]string {
 		users.delete(users.len - 1)
 		return users
 	} $else {
-		lines := read_lines('/etc/passwd')?
+		lines := read_lines('/etc/passwd')!
 		mut users := []string{cap: lines.len}
 		for line in lines {
 			end_name := line.index(':') or { line.len }
@@ -392,9 +392,9 @@ pub fn expand_tilde_to_home(path string) string {
 
 // write_file writes `text` data to the file in `path`.
 // If `path` exists, the contents of `path` will be overwritten with the contents of `text`.
-pub fn write_file(path string, text string) ? {
-	mut f := create(path)?
-	unsafe { f.write_full_buffer(text.str, usize(text.len))? }
+pub fn write_file(path string, text string) ! {
+	mut f := create(path)!
+	unsafe { f.write_full_buffer(text.str, usize(text.len))! }
 	f.close()
 }
 
