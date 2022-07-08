@@ -267,8 +267,13 @@ pub fn (mut c Checker) struct_init(mut node ast.StructInit) ast.Type {
 		&& c.table.cur_concrete_types.len == 0 {
 		pos := type_sym.name.last_index('.') or { -1 }
 		first_letter := type_sym.name[pos + 1]
-		if !first_letter.is_capital() && type_sym.kind != .placeholder {
-			c.error('cannot initialize builtin type `$type_sym.name`', node.pos)
+		if !first_letter.is_capital() && type_sym.kind != .placeholder
+			&& !type_sym.name.starts_with('_VAnonStruct') {
+			s := type_sym.name
+			x := s.starts_with('_')
+
+			c.error('cannot initialize builtin type1 $x  "$s" "${s[..4]}" `$type_sym.name`',
+				node.pos)
 		}
 	}
 	if type_sym.kind == .sum_type && node.fields.len == 1 {
