@@ -36,6 +36,11 @@ fn test_count_10_times_1_cycle_should_not_be_10_cycles_without_sync() {
 	eprintln('without synchronization the counter is: ${counter.counter:10} , expectedly != ${desired_iterations:10}')
 }
 
+fn test_atomic_count_plus_one_u32() {
+	mut c := u32(0)
+	assert stdatomic.add_u32(&c, 1) == 1
+}
+		
 fn test_atomic_count_plus_one_u64() {
 	mut c := u64(0)
 	assert stdatomic.add_u64(&c, 1) == 1
@@ -56,6 +61,11 @@ fn test_atomic_count_plus_greater_than_one_i64() {
 	assert stdatomic.add_i64(&c, 10) == 10
 }
 
+fn test_atomic_count_minus_one_u32() {
+	mut c := u32(1)
+	assert stdatomic.sub_u32(&c, 1) == 0
+}		
+		
 fn test_atomic_count_minus_one_u64() {
 	mut c := u64(1)
 	assert stdatomic.sub_u64(&c, 1) == 0
