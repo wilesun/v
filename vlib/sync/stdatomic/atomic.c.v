@@ -8,6 +8,18 @@ module stdatomic
 // Note: this implementations should be regarded as alpha stage and be tested
 // much more.
 
+// add_u32 adds provided delta as an atomic operation
+pub fn add_u32(ptr &u32, delta u32) u32 {
+	C.atomic_fetch_add_u32(voidptr(ptr), delta)
+	return *ptr
+}
+
+// sub_u32 subtracts provided delta as an atomic operation
+pub fn sub_u32(ptr &u32, delta int) u32 {
+	C.atomic_fetch_sub_u32(voidptr(ptr), delta)
+	return *ptr
+}
+
 // add_u64 adds provided delta as an atomic operation
 pub fn add_u64(ptr &u64, delta int) u64 {
 	C.atomic_fetch_add_u64(voidptr(ptr), delta)
